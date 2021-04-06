@@ -1,0 +1,24 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ 
+    ..\..\FrameXML\UI.xsd">
+
+    <Frame name="SpreadSheetsMainFrame" virtual = "true">
+    </Frame>
+
+    <Frame name="SpreadSheetsListTemplate" virtual="true">
+    </Frame>
+
+    <Frame name="SpreadSheetsCellTemplate" virtual="true">
+    </Frame>
+
+    <Frame name="SpreadSheetsSheetTemplate" virtual="true">
+    </Frame>
+    
+    <Frame name="SpreadSheetsSettingsTemplate" virtual="true">
+    </Frame>
+
+    <Button name="SpreadSheetsHubTemplate" virtual="true">
+    </Button>
+
+</Ui>

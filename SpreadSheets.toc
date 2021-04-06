@@ -1,0 +1,21 @@
+## Interface: 90000
+## Title: SpreadSheets
+## Notes: Allows the user to create and maintain spreadsheets ingame
+## Author: Zentarg
+## Version: 0.1A
+## SavedVariables: SpreadSheets
+
+Utility/Chat.lua
+Utility/Persistency.lua
+
+Fonts.xml
+
+GUI/Templates.xml
+GUI/GUI.lua
+GUI/Widgets/WidgetFrame.lua
+GUI/Widgets/WidgetFrameWithSidebar.lua
+GUI/Widgets/WidgetList.lua
+GUI/Widgets/WidgetSheet.lua
+GUI/Widgets/WidgetCell.lua
+
+SpreadSheets.lua
