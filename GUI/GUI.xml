@@ -1,0 +1,11 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	<Script file="GUI.lua"/>
+	<Include file="Templates.xml"/>
+	<Script file="Widgets\WidgetSlider.lua"/>
+	<Script file="Widgets\WidgetEditBox.lua"/>
+	<Script file="Widgets\WidgetFrame.lua"/>
+	<Script file="Widgets\WidgetFrameWIthSidebar.lua"/>
+	<Script file="Widgets\WidgetCell.lua"/>
+	<Script file="Widgets\WidgetSheet.lua"/>
+	<Script file="Widgets\WidgetCategoryList.lua"/>
+</Ui>

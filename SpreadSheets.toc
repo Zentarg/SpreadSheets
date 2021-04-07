@@ -5,17 +5,19 @@
 ## Version: 0.1A
 ## SavedVariables: SpreadSheets
 
-Utility/Chat.lua
-Utility/Persistency.lua
+Utility\Chat.lua
+Utility\Persistency.lua
 
 Fonts.xml
 
-GUI/Templates.xml
-GUI/GUI.lua
-GUI/Widgets/WidgetFrame.lua
-GUI/Widgets/WidgetFrameWithSidebar.lua
-GUI/Widgets/WidgetList.lua
-GUI/Widgets/WidgetSheet.lua
-GUI/Widgets/WidgetCell.lua
+GUI\GUI.xml
+# GUI/Templates.xml
+# GUI/GUI.lua
+# GUI/Widgets/WidgetFrame.lua
+# GUI/Widgets/WidgetFrameWithSidebar.lua
+# GUI/Widgets/WidgetSlider.lua
+# GUI/Widgets/WidgetList.lua
+# GUI/Widgets/WidgetSheet.lua
+# GUI/Widgets/WidgetCell.lua
 
 SpreadSheets.lua

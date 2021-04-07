@@ -37,7 +37,7 @@ local methods = {
     end,
     ["AddIcon"] = function(self, onclick, texture, bottom)
         assert(type(onclick) == "function")
-        local i = CreateFrame("Button", nil, self.frame)
+        local i = CreateFrame("Button", nil, self.sideBar)
         i:SetHeight(32)
         i:SetWidth(32)
         i:SetScript("OnClick", onclick)
@@ -49,12 +49,25 @@ local methods = {
             self:GetNormalTexture():SetVertexColor(1, 1, 1, 1)
         end)
         if (bottom) then
-            i:SetPoint("BOTTOMLEFT", self.frame, "BOTTOMLEFT", 8, 10 + 40 * #self.frame.IconsBottom)
-            table.insert(self.frame.IconsBottom, i)
+            i:SetPoint("BOTTOMLEFT", self.sideBar, "BOTTOMLEFT", 8, 10 + 40 * #self.sideBar.IconsBottom)
+            table.insert(self.sideBar.IconsBottom, i)
         else
-            i:SetPoint("TOPLEFT", self.frame, "TOPLEFT", 8, -62 - 40 * #self.frame.IconsTop)
-            table.insert(self.frame.IconsTop, i)
+            i:SetPoint("TOPLEFT", self.sideBar, "TOPLEFT", 8, -62 - 40 * #self.sideBar.IconsTop)
+            table.insert(self.sideBar.IconsTop, i)
         end
+    end,
+    ["AddTab"] = function(self, name, tabContent)
+        tabContent:SetPoint("TOPLEFT", self.tabFrame, "TOPLEFT")
+        tabContent:SetPoint("BOTTOMRIGHT", self.tabFrame, "BOTTOMRIGHT")
+        self.tabFrame.tabs[name] = tabContent
+    end,
+    ["OpenTab"] = function(self, name)
+        if (self.tabFrame.currentTab == name) then return end
+        if (self.tabFrame.currentTab ~= "") then
+            self.tabFrame.tabs[self.tabFrame.currentTab]:Hide()
+        end
+        self.tabFrame.tabs[name]:Show()
+        self.tabFrame.currentTab = name
     end
 }
 
@@ -64,7 +77,6 @@ local methods = {
 local function Constructor()
     local f = CreateFrame("Frame", nil, UIParent)
     f:Hide()
-    
     f:EnableMouse(true)
     f:SetMovable(true)
     f:SetResizable(true)
@@ -77,6 +89,13 @@ local function Constructor()
     f:SetMinResize(600, 400)
     f:SetToplevel(true)
     f:SetPoint("CENTER", UIParent, "CENTER")
+
+    local tabFrame = CreateFrame("Frame", nil, f)
+    tabFrame:SetPoint("TOPLEFT", f, "TOPLEFT", 49, -40)
+    tabFrame:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT")
+
+    tabFrame.tabs = {}
+    tabFrame.currentTab = ""
 
     local closeButton = CreateFrame("Button", nil, f)
     closeButton:SetScript("OnClick", Close_OnClick)
@@ -104,18 +123,25 @@ local function Constructor()
     local title = titleBar:CreateFontString(nil, "OVERLAY", "Arialnb")
     title:SetPoint("TOP", titleBar, "TOP", 0, -10)
 
-    f.IconsTop = {}
-    f.IconsBottom = {}
+    local sideBar = CreateFrame("Frame", nil, f)
+    sideBar:SetPoint("TOPLEFT", f, "TOPLEFT")
+    sideBar:SetPoint("BOTTOMLEFT",  f, "BOTTOMLEFT")
+    sideBar:SetWidth(49)
+    sideBar.background = sideBar:CreateTexture(nil, 'BACKGROUND')
+    sideBar.background:SetAllPoints(sideBar)
+    sideBar.background:SetColorTexture(0.12, 0.12, 0.12, 1)
 
-    local Logo = f:CreateTexture(nil, "ARTWORK")
+    sideBar.IconsTop = {}
+    sideBar.IconsBottom = {}
+
+    local Logo = sideBar:CreateTexture(nil, "ARTWORK")
     Logo:SetSize(32, 32)
-    Logo:SetPoint("TOPLEFT", f, "TOPLEFT", 8, -10)
+    Logo:SetPoint("TOPLEFT", sideBar, "TOPLEFT", 8, -10)
     Logo:SetTexture('Interface\\AddOns\\SpreadSheets\\Media\\Icons\\Logo')
 
-
-
     local sizer_se = CreateFrame("Frame", nil, f)
-    sizer_se:SetPoint("BOTTOMRIGHT", 1, 0)
+    sizer_se:SetFrameStrata("FULLSCREEN_DIALOG")
+    sizer_se:SetPoint("BOTTOMRIGHT", 3, -2)
     sizer_se:SetWidth(25)
     sizer_se:SetHeight(25)
     sizer_se:EnableMouse()
@@ -130,6 +156,8 @@ local function Constructor()
         frame = f,
         closeButton = closeButton,
         titleBar = titleBar,
+        sideBar = sideBar,
+        tabFrame = tabFrame,
         title = title,
         sizer_se = sizer_se,
         type = Type
@@ -144,16 +172,3 @@ local function Constructor()
 end
 
 S.GUI:RegisterWidgetType("FrameWithSidebar", Constructor)
-
--- S.MainFrame = CreateFrame('Frame', AddonName.."MainFrame", UIParent, 'SpreadSheetsMainFrame')
---     S.MainFrame:SetFrameStrata('DIALOG')
---     S.MainFrame:SetWidth(MainFrameWidth)
---     S.MainFrame:SetHeight(MainFrameHeight)
---     S.MainFrame:SetPoint('CENTER', UIParent, 'CENTER')
---     S.MainFrame:EnableMouse(true)
---     S.MainFrame:RegisterForDrag('LeftButton')
---     S.MainFrame:SetClampedToScreen(true)
---     S.MainFrame:Hide()
---     S.MainFrame.background = S.MainFrame:CreateTexture(nil, 'BACKGROUND')
---     S.MainFrame.background:SetAllPoints(S.MainFrame)
---     S.MainFrame.background:SetColorTexture(0.1, 0.1, 0.1, 1)
