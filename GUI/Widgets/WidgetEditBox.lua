@@ -24,12 +24,12 @@ local methods = {
     ["SetPoint"] = function(self, pos1, frame, pos2, x, y)
         self.editBox:SetPoint(pos1, frame, pos2, x, y)
     end,
-    ["SetOnValueChanged"] = function(self, OnValueChanged)
-        assert(type(OnValueChanged) == "function")
-        self.editBox:SetScript("OnValueChanged", OnValueChanged)
+    ["SetOnTextChanged"] = function(self, OnTextChanged)
+        assert(type(OnTextChanged) == "function")
+        self.editBox:SetScript("OnTextChanged", OnTextChanged)
     end,
-    ["SetValue"] = function(self, value)
-        self.editBox:SetValue(value)
+    ["SetText"] = function(self, text)
+        self.editBox:SetText(text)
     end,
     ["SetOnCheckmarkClicked"] = function(self, OnCheckmarkClicked)
         assert(type(OnCheckmarkClicked) == "function")

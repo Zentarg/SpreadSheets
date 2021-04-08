@@ -26,6 +26,13 @@ end
 
 
 local methods = {
+    ["RegisterEvent"] = function(self, event)
+        self.frame:RegisterEvent(event)
+    end,
+    ["SetScript"] = function(self, event, script)
+        assert(type(script) == "function")
+        self.frame:SetScript(event, script)
+    end,
     ["SetTitle"] = function(self, title)
         self.title:SetText(title)
     end,

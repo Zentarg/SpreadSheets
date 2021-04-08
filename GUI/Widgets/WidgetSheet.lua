@@ -4,6 +4,8 @@ local alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 -- [[       Scripts        ]] --
 
+local function OnCellChanged()end
+
 local function slider_OnValueChanged(self, value)
     value = value / self:GetParent().content:GetScale()
     self:GetParent().content.y = value
@@ -14,7 +16,14 @@ local function sliderH_OnValueChanged(self, value)
     value = value / self:GetParent().content:GetScale()
     self:GetParent().content.x = value
     self:GetParent().content:SetPoint("TOPLEFT", -value, self:GetParent().content.y)
+end
 
+local function editBox_OnEnterPressed(self)
+    if (self:GetParent().focusedCell ~= nil) then
+        self:GetParent().focusedCell:SetText(self:GetText())
+    end
+    self:ClearFocus()
+    OnCellChanged()
 end
 
 local function ScrollFrame_OnMouseWheel(self, value)
@@ -90,10 +99,9 @@ end
 -- [[        Methods       ]] --
 
 local methods = {
-    ["SetText"] = function(self, text)
-        assert(type(text) == "string")
-        self.frame.text = text
-        self.content:SetText(text)
+    ["SetOnCellChanged"] = function(self, onCellChanged)
+        assert(type(onCellChanged) == "function")
+        OnCellChanged = onCellChanged
     end,
     ["Hide"] = function (self)
         self.frame:Hide()
@@ -115,56 +123,71 @@ local methods = {
     end,
     ["AddRow"] = function(self)
 
+        self.frame.rows = self.frame.rows + 1
     end,
     ["AddColumnn"] = function(self)
 
+        self.frame.columns = self.frame.columns + 1
     end,
-    ["LoadCells"] = function(self, cells)
-        for i = 1, #cells do
-            for j = 1, #cells[i] do
-                local name = i.."-"..j
-
-                -- for k = 1, math.ceil(i/#alphabet) do
-                --     name = name + string.sub(alphabet, k, 1)
-                -- end
-                
-                local c = S.GUI:Create("Cell")
-                c:SetName(name)
-                c:SetText(cells[i][j]:GetText())
-                c:SetParent(self.frame)
-                c:SetPoint("TOPLEFT", self.frame, "TOPLEFT", c:GetWidth() * j + 10, c:GetHeight() * i + 10)
-                c:SetOnClick(function()
-                    self.frame.focusedCell:SetIsFocused(false)
-                    c:SetIsFocused(true)
-                end)
-                self.frame.cells[name] = c
+    ["ClearSheet"] = function(self)
+        for k, v in pairs(self.frame.cells) do
+            v:SetText("")
+        end
+    end,
+    ["SaveCurrentSheet"] = function(self)
+        if (self.frame.currentSheet == nil) then
+            self.frame.currentSheet = {}
+        else
+            wipe(self.frame.currentSheet["cells"])
+        end
+        for k, v in pairs(self.frame.cells) do
+            if (v:GetText() ~= "") then
+                local c = {}
+                c["text"] = v:GetText()
+                c["row"] = v:GetRow()
+                c["column"] = v:GetColumn()
+                table.insert(self.frame.currentSheet["cells"], c)
             end
         end
-        self.frame.rows = #cells
-        self.frame.columns = #cells[1]
+        -- S.DB["Sheets"][self.frame.currentSheet["name"]] = self.frame.currentSheet
     end,
-    ["InitCells"] = function(self, rows, columns)
-        local contentHeight = 0
-        local contentWidth = 10
+    ["LoadSheet"] = function(self, sheet)
+        self:ClearSheet()
+        local rows, columns = sheet["rows"], sheet["columns"]
+        if (rows > self.frame.rows) then
+            -- AddRow
+        elseif(columns > self.frame.columns) then
+            -- AddColumn
+        end
+        for k, v in pairs(sheet["cells"]) do
+            self.frame.cells[v["row"] .. "-" .. v["column"]]:SetText(v["text"])
+        end
+        self.frame.currentSheet = sheet
+    end,
+    ["InitSheet"] = function(self, rows, columns)
+        local contentHeight, contentWidth = 0, 10
         local dummy = S.GUI:Create("Cell")
 
         local cscale = self.content:GetScale()
 
-
         for i = 1, rows do
             for j = 1, columns do
-                local name = i .. "-" .. j
-                
                 local c = S.GUI:Create("Cell")
-                c:SetName(name)
-                c:SetText(name)
+                c:SetRow(i)
+                c:SetColumn(j)
                 c:SetParent(self.content)
                 c:SetPoint("TOPLEFT", self.content, "TOPLEFT", (c:GetWidth() + 10) * (j-1) + 10, -((c:GetHeight() + 10) * (i-1)))
-                -- c:SetOnClick(function()
-                --     self.frame.focusedCell:SetIsFocused(false)
-                --     c:SetIsFocused(true)
-                -- end)
-                self.frame.cells[name] = c
+                c:SetOnMouseDown(function(e, button)
+                    if (button == 'LeftButton') then
+                        if (self.frame.focusedCell ~= nil) then
+                            self.frame.focusedCell:SetIsFocused(false)
+                        end
+                        c:SetIsFocused(true)
+                        self.frame.focusedCell = c
+                        self.editBox:SetText(c:GetText())
+                    end
+                end)
+                self.frame.cells[i.."-"..j] = c
             end
         end
         self.frame.rows = rows
@@ -209,6 +232,7 @@ local function Constructor()
     editBox:SetPoint("TOPLEFT", f, 10, 0)
     editBox:SetPoint("TOPRIGHT", f, -10, 0)
     editBox:SetHeight(30)
+    editBox:SetOnEnterPressed(editBox_OnEnterPressed)
 
     local scrollFrame = CreateFrame("ScrollFrame", nil, f)
     scrollFrame:SetPoint("TOPLEFT", f, 0, -40)
@@ -242,8 +266,9 @@ local function Constructor()
 
     f.rows = 0
     f.columns = 0
-    f.cells = {}
+    f.currentSheet = nil
     f.focusedCell = nil
+    f.cells = {}
 
     local widget = {
         frame = f,
@@ -251,6 +276,7 @@ local function Constructor()
         content = content,
         scrollBar = scrollBar,
         scrollBarH = scrollBarH,
+        editBox = editBox,
         type = Type
     }
 

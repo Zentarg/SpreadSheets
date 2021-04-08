@@ -1,12 +1,15 @@
 local AddonName, S = ...
 local MainFrameWidth, MainFrameHeight = 1000, 800
 
+local mainFrame = S.GUI:Create("FrameWithSidebar")
+mainFrame:RegisterEvent("PLAYER_LOGIN")
+mainFrame:RegisterEvent("PLAYER_LOGOUT")
+mainFrame:SetScript("OnEvent", function(self, event, ...)
+    S.EventHandler[event](self, ...)
+end)
+mainFrame:Show()
 
 function InitGUI()
-    S:LoadSavedData()
-    -- function(self, onclick, texture, bottom)
-    local mainFrame = S.GUI:Create("FrameWithSidebar")
-    mainFrame:Show()
     mainFrame:SetTitle(AddonName)
     mainFrame:AddIcon(function()
             mainFrame:OpenTab('Settings')
@@ -32,8 +35,14 @@ function InitGUI()
     sheet:SetParent(settingsFrame)
     sheet:SetPoint("TOPLEFT", settingsFrame, "TOPLEFT")
     sheet:SetPoint("BOTTOMRIGHT", settingsFrame, "BOTTOMRIGHT")
+    sheet:SetOnCellChanged(function()
+        sheet:SaveCurrentSheet()
+    end)
     mainFrame:AddTab('Settings', settingsFrame)
-    sheet:InitCells(27, 10)
+    sheet:InitSheet(30, 30)
+    -- S.DB:CreateSheet("test2", 30, 30)
+    sheet:LoadSheet(S.DB:GetSheet("test2"))
+
 
     local infoFrame = CreateFrame("Frame", nil, mainFrame.tabFrame)
     infoFrame:Hide()
@@ -70,8 +79,4 @@ end
 -- AstralKeyFrame.background:SetAllPoints(AstralKeyFrame)
 -- AstralKeyFrame.background:SetColorTexture(0, 0, 0, 0.8)
 
-function OnLogout()
-    S:SaveData()
-end
-
-InitGUI()
+S.EventHandler:AddLoginMethod(InitGUI)

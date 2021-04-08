@@ -3,9 +3,10 @@
 ## Notes: Allows the user to create and maintain spreadsheets ingame
 ## Author: Zentarg
 ## Version: 0.1A
-## SavedVariables: SpreadSheets
+## SavedVariables: SpreadSheetsDB
 
 Utility\Chat.lua
+Utility\EventHandler.lua
 Utility\Persistency.lua
 
 Fonts.xml

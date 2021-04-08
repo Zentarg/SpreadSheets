@@ -18,9 +18,6 @@ end
 -- [[        Methods       ]] --
 
 local methods = {
-    ["SetName"] = function(self, name)
-        self.frame.name = name
-    end,
     ["SetText"] = function(self, text)
         assert(type(text) == "string")
         self.frame.text = text
@@ -47,9 +44,9 @@ local methods = {
     ["GetWidth"] = function(self)
         return self.frame:GetWidth()
     end,
-    ["SetOnClick"] = function(self, onclick)
-        assert(type(onclick) == "function")
-        self.frame:SetScript("OnClick", onclick)
+    ["SetOnMouseDown"] = function(self, onMouseDown)
+        assert(type(onMouseDown) == "function")
+        self.frame:SetScript("OnMouseDown", onMouseDown)
     end,
     ["SetParent"] = function(self, parent)
         self.frame:SetParent(parent)
@@ -66,7 +63,24 @@ local methods = {
         self.content:SetText(text)
     end,
     ["SetIsFocused"] = function(self, isFocused)
+        if (isFocused) then
+            self.frame.background:SetColorTexture(0.2, 0.2, 0.2, 1)
+        else
+            self.frame.background:SetColorTexture(0.15, 0.15, 0.15, 1)
+        end
         self.frame.isFocused = isFocused
+    end,
+    ["SetRow"] = function(self, row)
+        self.frame.row = row
+    end,
+    ["SetColumn"] = function(self, column)
+        self.frame.column = column
+    end,
+    ["GetRow"] = function(self)
+        return self.frame.row
+    end,
+    ["GetColumn"] = function(self)
+        return self.frame.column
     end
 }
 
@@ -88,6 +102,8 @@ local function Constructor()
 
     f.text = ""
     f.name = ""
+    f.row = 0
+    f.column = 0
     f.isFocused = false
 
     local content = f:CreateFontString(nil, "OVERLAY", "Arialn_Cell")
