@@ -234,35 +234,41 @@ local function Constructor()
     editBox:SetHeight(30)
     editBox:SetOnEnterPressed(editBox_OnEnterPressed)
 
-    local scrollFrame = CreateFrame("ScrollFrame", nil, f)
+    local scrollFrame = S.GUI:Create("ScrollFrame")
+    scrollFrame:SetParent(f)
     scrollFrame:SetPoint("TOPLEFT", f, 0, -40)
     scrollFrame:SetPoint("BOTTOMRIGHT", f, -10, 10)
-    scrollFrame:SetScript("OnMouseWheel", ScrollFrame_OnMouseWheel)
-    scrollFrame:SetScript("OnSizeChanged", ScrollFrame_SizeChanged)
+    scrollFrame:SetOnSizeChanged(ScrollFrame_SizeChanged)
 
-    local scrollBar = S.GUI:Create("Slider")
-    scrollBar:SetParent(scrollFrame)
-    scrollBar:SetPoint("TOPRIGHT", scrollFrame, 10, 0)
-    scrollBar:SetPoint("BOTTOMRIGHT", scrollFrame, 10, 32)
-    scrollBar:SetVertical()
-    scrollBar:SetOnValueChanged(slider_OnValueChanged)
-    scrollFrame.scrollBar = scrollBar
+    -- local scrollFrame = CreateFrame("ScrollFrame", nil, f)
+    -- scrollFrame:SetPoint("TOPLEFT", f, 0, -40)
+    -- scrollFrame:SetPoint("BOTTOMRIGHT", f, -10, 10)
+    -- scrollFrame:SetScript("OnMouseWheel", ScrollFrame_OnMouseWheel)
+    -- scrollFrame:SetScript("OnSizeChanged", ScrollFrame_SizeChanged)
 
-    local scrollBarH = S.GUI:Create("Slider")
-    scrollBarH:SetParent(scrollFrame)
-    scrollBarH:SetPoint("BOTTOMLEFT", scrollFrame, 0, -10)
-    scrollBarH:SetPoint("BOTTOMRIGHT", scrollFrame, -32, -10)
-    scrollBarH:SetHorizontal()
-    scrollBarH:SetOnValueChanged(sliderH_OnValueChanged)
-    scrollFrame.scrollBarH = scrollBarH
+    -- local scrollBar = S.GUI:Create("Slider")
+    -- scrollBar:SetParent(scrollFrame)
+    -- scrollBar:SetPoint("TOPRIGHT", scrollFrame, 10, 0)
+    -- scrollBar:SetPoint("BOTTOMRIGHT", scrollFrame, 10, 32)
+    -- scrollBar:SetVertical()
+    -- scrollBar:SetOnValueChanged(slider_OnValueChanged)
+    -- scrollFrame.scrollBar = scrollBar
 
-    local content = CreateFrame("Frame", nil, scrollFrame)
-    scrollFrame:SetScrollChild(content)
-    content:SetPoint("TOPLEFT")
-    content:SetPoint("TOPRIGHT")
-    content.y = 0
-    content.x = 0
-    scrollFrame.content = content
+    -- local scrollBarH = S.GUI:Create("Slider")
+    -- scrollBarH:SetParent(scrollFrame)
+    -- scrollBarH:SetPoint("BOTTOMLEFT", scrollFrame, 0, -10)
+    -- scrollBarH:SetPoint("BOTTOMRIGHT", scrollFrame, -32, -10)
+    -- scrollBarH:SetHorizontal()
+    -- scrollBarH:SetOnValueChanged(sliderH_OnValueChanged)
+    -- scrollFrame.scrollBarH = scrollBarH
+
+    -- local content = CreateFrame("Frame", nil, scrollFrame)
+    -- scrollFrame:SetScrollChild(content)
+    -- content:SetPoint("TOPLEFT")
+    -- content:SetPoint("TOPRIGHT")
+    -- content.y = 0
+    -- content.x = 0
+    -- scrollFrame.content = content
 
     f.rows = 0
     f.columns = 0
@@ -273,9 +279,9 @@ local function Constructor()
     local widget = {
         frame = f,
         scrollFrame = scrollFrame,
-        content = content,
-        scrollBar = scrollBar,
-        scrollBarH = scrollBarH,
+        content = scrollFrame.content,
+        scrollBar = scrollFrame.scrollBar,
+        scrollBarH = scrollFrame.scrollBarH,
         editBox = editBox,
         type = Type
     }

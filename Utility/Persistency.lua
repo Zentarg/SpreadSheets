@@ -74,11 +74,16 @@ end
 
 function SpreadSheetLDB:GetSheet(name)
     if (SpreadSheetLDB["Sheets"]) then
-        return SpreadSheetLDB["Sheets"][name]
+        for k, v in pairs(SpreadSheetLDB["Sheets"]) do
+            if (v["name"] == name) then
+                return v
+            end
+        end
     end
+    return nil
 end
 
-function SpreadSheetLDB:CreateSheet(name, rows, columns)
+function SpreadSheetLDB:CreateSheet(category, name, rows, columns)
     while (SpreadSheetLDB["Sheets"][name] ~= nil) do
         local n = tonumber(strsub(name, string.len(name) + 1))
         if (n == nil) then
@@ -89,6 +94,7 @@ function SpreadSheetLDB:CreateSheet(name, rows, columns)
         name = name .. tostring(n)
     end
     local s = {}
+    s["category"] = category
     s["name"] = name
     s["cells"] = {}
     s["rows"] = rows
@@ -103,13 +109,69 @@ function SpreadSheetLDB:CreateSheet(name, rows, columns)
     -- end
 
     if (SpreadSheetLDB["Sheets"]) then
-        SpreadSheetLDB["Sheets"][name] = s
+        -- SpreadSheetLDB["Sheets"][name] = s
+        table.insert(SpreadSheetLDB["Sheets"], s)
+    end
+    if (SpreadSheetLDB["Categories"]) then
+        for k, v in pairs(SpreadSheetLDB["Categories"]) do
+            if (v["name"] == category) then
+                table.insert(v, name)
+                break
+            end
+        end
     end
     return SpreadSheetLDB["Sheets"][name]
+end
+
+function SpreadSheetLDB:RemoveSheet(name)
+    for k, v in pairs(SpreadSheetLDB["Categories"]) do
+        for k2, v2 in pairs(v) do
+            if (v2 == name) then
+                table.remove(v, k2)
+            end
+        end
+    end
+    for k, v in pairs(SpreadSheetLDB["Sheets"]) do
+        if (v["name"] == name) then
+            table.remove(SpreadSheetLDB["Sheets"], k)
+        end
+    end
 end
 
 function SpreadSheetLDB:GetCategories()
     return SpreadSheetLDB["Categories"]
 end
+
+function SpreadSheetLDB:CreateCategory(name)
+    while (SpreadSheetLDB["Categories"][name] ~= nil) do
+        local n = tonumber(strsub(name, string.len(name) + 1))
+        if (n == nil) then
+            n = 1
+        else
+            n = n + 1
+        end
+        name = name .. tostring(n)
+    end
+    if (SpreadSheetLDB["Categories"]) then
+        local c = {}
+        c["name"] = name
+        table.insert(SpreadSheetLDB["Categories"], c)
+    end
+end
+
+function SpreadSheetLDB:RemoveCategory(name)
+    for k, v in pairs(SpreadSheetLDB["Categories"]) do
+        if (v["name"] == name) then
+            table.remove(SpreadSheetLDB["Categories"], k)
+        end
+    end
+    for k, v in pairs(SpreadSheetLDB["Sheets"]) do
+        if (v["category"] == name) then
+            table.remove(SpreadSheetLDB["Sheets"], k)
+        end
+    end
+end
+
+
 
 S.DB = SpreadSheetLDB

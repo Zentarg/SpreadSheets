@@ -42,6 +42,9 @@ local methods = {
     ["Show"] = function (self)
         self.frame:Show()
     end,
+    ["IsShown"] = function(self)
+        return self.frame:IsShown()
+    end,
     ["AddIcon"] = function(self, onclick, texture, bottom)
         assert(type(onclick) == "function")
         local i = CreateFrame("Button", nil, self.sideBar)
@@ -127,7 +130,7 @@ local function Constructor()
     titleBar:SetScript("OnMouseUp", MoverSizer_OnMouseUp)
     f.titleBar = titleBar
 
-    local title = titleBar:CreateFontString(nil, "OVERLAY", "Arialnb")
+    local title = titleBar:CreateFontString(nil, "OVERLAY", "Arialnb_H1")
     title:SetPoint("TOP", titleBar, "TOP", 0, -10)
 
     local sideBar = CreateFrame("Frame", nil, f)
@@ -142,8 +145,8 @@ local function Constructor()
     sideBar.IconsBottom = {}
 
     local Logo = sideBar:CreateTexture(nil, "ARTWORK")
-    Logo:SetSize(32, 32)
-    Logo:SetPoint("TOPLEFT", sideBar, "TOPLEFT", 8, -10)
+    Logo:SetSize(48, 48)
+    Logo:SetPoint("TOPLEFT", sideBar, "TOPLEFT", 0, -10)
     Logo:SetTexture('Interface\\AddOns\\SpreadSheets\\Media\\Icons\\Logo')
 
     local sizer_se = CreateFrame("Frame", nil, f)

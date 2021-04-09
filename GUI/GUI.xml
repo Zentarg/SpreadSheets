@@ -4,8 +4,9 @@
 	<Script file="Widgets\WidgetSlider.lua"/>
 	<Script file="Widgets\WidgetEditBox.lua"/>
 	<Script file="Widgets\WidgetFrame.lua"/>
-	<Script file="Widgets\WidgetFrameWIthSidebar.lua"/>
+	<Script file="Widgets\WidgetFrameWithSidebar.lua"/>
+	<Script file="Widgets\WidgetScrollFrame.lua"/>
 	<Script file="Widgets\WidgetCell.lua"/>
 	<Script file="Widgets\WidgetSheet.lua"/>
-	<Script file="Widgets\WidgetCategoryList.lua"/>
+	<Script file="Widgets\WidgetTreeList.lua"/>
 </Ui>

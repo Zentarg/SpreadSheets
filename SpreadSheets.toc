@@ -5,6 +5,8 @@
 ## Version: 0.1A
 ## SavedVariables: SpreadSheetsDB
 
+Libs\embeds.xml
+
 Utility\Chat.lua
 Utility\EventHandler.lua
 Utility\Persistency.lua
